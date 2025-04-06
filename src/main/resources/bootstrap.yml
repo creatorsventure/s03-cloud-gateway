@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: s03-cloud-gateway
+  config:
+    # import: configserver:http://localhost:8081
+    import:
+      configserver:
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: S04-CLOUD-CONFIG
+  profiles:
+    active: test # dev/prod/test
