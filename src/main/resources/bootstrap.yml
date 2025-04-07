@@ -9,6 +9,6 @@ spring:
     config:
       discovery:
         enabled: true
-        service-id: S04-CLOUD-CONFIG
+        service-id: S02-CLOUD-CONFIG
   profiles:
-    active: test # dev/prod/test
+    active: dev # dev/prod/test
