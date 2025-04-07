@@ -11,4 +11,4 @@ spring:
         enabled: true
         service-id: S02-CLOUD-CONFIG
   profiles:
-    active: dev # dev/prod/test
+    active: dev
