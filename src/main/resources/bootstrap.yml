@@ -1,11 +1,11 @@
 spring:
   application:
     name: s03-cloud-gateway
-  profiles:
-    active: dev
   config:
     import: ${CONFIG_SERVER_URL}
-  #import: configserver:http://localhost:8081
+  profiles:
+    active: dev
+  #import: configserver:http://localhost:8081/
   #import:
   #configserver:
   # Enable the below setting to connect config server via eureka
