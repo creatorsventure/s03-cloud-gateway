@@ -3,12 +3,12 @@ spring:
     name: s03-cloud-gateway
   config:
     # import: configserver:http://localhost:8081
-    import:
-      configserver:
-  cloud:
-    config:
-      discovery:
-        enabled: true
-        service-id: S02-CLOUD-CONFIG
+    import: configserver:http://localhost:8081
+  # Enable the below setting to connect config server via eureka
+  #cloud:
+    #config:
+      #discovery:
+        #enabled: true
+        #service-id: S02-CLOUD-CONFIG
   profiles:
     active: dev
