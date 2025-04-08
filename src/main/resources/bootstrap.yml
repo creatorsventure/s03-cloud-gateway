@@ -14,3 +14,7 @@ spring:
       discovery:
         enabled: true
         service-id: S02-CLOUD-CONFIG
+eureka:
+  client:
+    service-url:
+      defaultZone: ${DISCOVERY_URL}

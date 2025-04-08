@@ -1,7 +1,3 @@
 # Server
 server:
   port: 8080
-eureka:
-  client:
-    service-url:
-      defaultZone: http://local.docker.service-registry:8761/eureka/
