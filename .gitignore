@@ -9,6 +9,7 @@ config/db
 config/log
 .DS_Store
 .p12
+.env
 
 
 ### STS ###
