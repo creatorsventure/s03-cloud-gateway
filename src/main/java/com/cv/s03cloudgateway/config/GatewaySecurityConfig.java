@@ -32,6 +32,7 @@ public class GatewaySecurityConfig {
 
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+         // log.info("properties UnauthenticatedPaths : {}", (Object) properties.getUnauthenticatedPaths().toArray(new String[0]));
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .cors(Customizer.withDefaults())
