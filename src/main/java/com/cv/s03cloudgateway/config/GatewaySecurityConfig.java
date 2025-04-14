@@ -1,10 +1,10 @@
 package com.cv.s03cloudgateway.config;
 
+import com.cv.s03cloudgateway.config.props.CloudGatewayProperties;
 import com.cv.s03cloudgateway.service.component.JwtAuthenticationManager;
 import com.cv.s03cloudgateway.service.component.JwtSecurityContextRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -25,14 +25,14 @@ import java.util.List;
 @EnableWebFluxSecurity
 public class GatewaySecurityConfig {
 
-    @Value("#{'${cors.allowedOrigins}'.split(',')}")
-    private List<String> allowedOrigins;
+    private CloudGatewayProperties properties;
 
     private final JwtAuthenticationManager authenticationManager;
     private final JwtSecurityContextRepository securityContextRepository;
 
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+         // log.info("properties UnauthenticatedPaths : {}", (Object) properties.getUnauthenticatedPaths().toArray(new String[0]));
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .cors(Customizer.withDefaults())
@@ -48,13 +48,7 @@ public class GatewaySecurityConfig {
                 )
                 .authorizeExchange(auth -> auth
                         .pathMatchers(HttpMethod.OPTIONS).permitAll()
-                        .pathMatchers(
-                                "/api/org-service/user/count",
-                                "/api/org-service/sign-up",
-                                "/api/org-service/authentication/login",
-                                "/api/org-service/authentication/logout",
-                                "/api/org-service/authentication/refresh-token"
-                        ).permitAll()
+                        .pathMatchers(properties.getUnauthenticatedPaths().toArray(new String[0])).permitAll()
                         .anyExchange().authenticated()
                 ).build();
     }
@@ -62,10 +56,10 @@ public class GatewaySecurityConfig {
     // ✅ Proper WebFlux CORS setup
     @Bean
     public CorsWebFilter corsWebFilter() {
-        log.info("CorsWebFilter AllowedOrigins: {}", allowedOrigins);
+        // log.info("CorsWebFilter AllowedOrigins: {}", properties.getAllowedOrigins());
         CorsConfiguration config = new CorsConfiguration();
         // ⚠️ Use specific origins in production
-        config.setAllowedOrigins(allowedOrigins);
+        config.setAllowedOrigins(properties.getAllowedOrigins());
         config.setAllowedMethods(List.of(
                 HttpMethod.GET.name(),
                 HttpMethod.POST.name(),
