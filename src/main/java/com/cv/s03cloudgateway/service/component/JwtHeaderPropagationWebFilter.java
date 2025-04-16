@@ -6,7 +6,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.core.context.SecurityContext;
-import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
@@ -15,12 +14,11 @@ import reactor.core.publisher.Mono;
 import java.util.Map;
 
 @Slf4j
-@Component
 public class JwtHeaderPropagationWebFilter implements WebFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
-        // log.info("JwtHeaderPropagationWebFilter.filter");
+        log.info("🔐 JwtHeaderPropagationWebFilter - uri: {} method: {}", exchange.getRequest().getURI(), exchange.getRequest().getMethod());
         if (exchange.getRequest().getMethod() == HttpMethod.OPTIONS) {
             // log.info("JwtHeaderPropagationWebFilter.filter Options forward");
             return chain.filter(exchange); // skip JWT propagation
@@ -44,6 +42,6 @@ public class JwtHeaderPropagationWebFilter implements WebFilter {
                         return chain.filter(mutatedExchange);
                     }
                     return chain.filter(exchange);
-                });
+                }).switchIfEmpty(chain.filter(exchange));
     }
 }

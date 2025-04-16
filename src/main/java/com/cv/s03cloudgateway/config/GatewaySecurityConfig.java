@@ -2,6 +2,7 @@ package com.cv.s03cloudgateway.config;
 
 import com.cv.s03cloudgateway.config.props.CloudGatewayProperties;
 import com.cv.s03cloudgateway.service.component.JwtAuthenticationManager;
+import com.cv.s03cloudgateway.service.component.JwtHeaderPropagationWebFilter;
 import com.cv.s03cloudgateway.service.component.JwtSecurityContextRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,7 @@ import org.springframework.security.web.server.header.ReferrerPolicyServerHttpHe
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
+import org.springframework.web.server.WebFilter;
 
 import java.util.List;
 
@@ -76,5 +78,10 @@ public class GatewaySecurityConfig {
         source.registerCorsConfiguration("/**", config);
 
         return new CorsWebFilter(source);
+    }
+
+    @Bean
+    public WebFilter jwtHeaderPropagationWebFilter() {
+        return new JwtHeaderPropagationWebFilter(); // manually instantiate your filter
     }
 }
