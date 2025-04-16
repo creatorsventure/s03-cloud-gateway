@@ -32,7 +32,7 @@ public class GatewaySecurityConfig {
 
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
-         // log.info("properties UnauthenticatedPaths : {}", (Object) properties.getUnauthenticatedPaths().toArray(new String[0]));
+        // log.info("properties UnauthenticatedPaths : {}", (Object) properties.getUnauthenticatedPaths().toArray(new String[0]));
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .cors(Customizer.withDefaults())
@@ -67,8 +67,8 @@ public class GatewaySecurityConfig {
                 HttpMethod.DELETE.name(),
                 HttpMethod.OPTIONS.name()
         ));
-        config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-        config.setExposedHeaders(List.of("Authorization"));
+        config.setAllowedHeaders(properties.getAllowedHeaders());
+        config.setExposedHeaders(properties.getExposedHeaders());
         config.setAllowCredentials(true);
         config.setMaxAge(3600L);
 
