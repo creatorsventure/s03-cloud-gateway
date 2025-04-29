@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.cv</groupId>
     <artifactId>s03-cloud-gateway</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2-SNAPSHOT</version>
     <name>s03-cloud-gateway</name>
     <description>s03-cloud-gateway</description>
     <url/>

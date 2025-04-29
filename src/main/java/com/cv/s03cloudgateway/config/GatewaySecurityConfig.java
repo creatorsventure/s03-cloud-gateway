@@ -2,6 +2,7 @@ package com.cv.s03cloudgateway.config;
 
 import com.cv.s03cloudgateway.config.props.CloudGatewayProperties;
 import com.cv.s03cloudgateway.service.component.JwtAuthenticationManager;
+import com.cv.s03cloudgateway.service.component.JwtHeaderPropagationWebFilter;
 import com.cv.s03cloudgateway.service.component.JwtSecurityContextRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,7 @@ import org.springframework.security.web.server.header.ReferrerPolicyServerHttpHe
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
+import org.springframework.web.server.WebFilter;
 
 import java.util.List;
 
@@ -32,7 +34,7 @@ public class GatewaySecurityConfig {
 
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
-         // log.info("properties UnauthenticatedPaths : {}", (Object) properties.getUnauthenticatedPaths().toArray(new String[0]));
+        // log.info("properties UnauthenticatedPaths : {}", (Object) properties.getUnauthenticatedPaths().toArray(new String[0]));
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .cors(Customizer.withDefaults())
@@ -67,8 +69,8 @@ public class GatewaySecurityConfig {
                 HttpMethod.DELETE.name(),
                 HttpMethod.OPTIONS.name()
         ));
-        config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-        config.setExposedHeaders(List.of("Authorization"));
+        config.setAllowedHeaders(properties.getAllowedHeaders());
+        config.setExposedHeaders(properties.getExposedHeaders());
         config.setAllowCredentials(true);
         config.setMaxAge(3600L);
 
@@ -76,5 +78,10 @@ public class GatewaySecurityConfig {
         source.registerCorsConfiguration("/**", config);
 
         return new CorsWebFilter(source);
+    }
+
+    @Bean
+    public WebFilter jwtHeaderPropagationWebFilter() {
+        return new JwtHeaderPropagationWebFilter(); // manually instantiate your filter
     }
 }

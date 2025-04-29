@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/fallback/")
 public class FallbackController {
 
-    @RequestMapping("org-service")
-    public ResponseEntity<Object> fallbackForOrgService() {
-        return getFallbackResponse("Org service currently unavailable");
+    @RequestMapping("service-down")
+    public ResponseEntity<Object> fallbackForServices() {
+        return getFallbackResponse("Service currently unavailable");
     }
 
     private ResponseEntity<Object> getFallbackResponse(Object o) {

@@ -13,5 +13,7 @@ import java.util.List;
 @ConfigurationProperties(prefix = "cloud-gateway")
 public class CloudGatewayProperties {
     private List<String> allowedOrigins;
+    private List<String> allowedHeaders;
+    private List<String> exposedHeaders;
     private List<String> unauthenticatedPaths;
 }
