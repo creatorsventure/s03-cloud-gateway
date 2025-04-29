@@ -2,6 +2,7 @@ package com.cv.s03cloudgateway.service.component;
 
 import com.cv.s03cloudgateway.constant.GatewayConstant;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
@@ -29,8 +30,9 @@ public class JwtHeaderPropagationWebFilter implements WebFilter {
                     // log.info("JwtHeaderPropagationWebFilter.filter {}", auth);
                     if (auth != null && auth.isAuthenticated()) {
                         Map<String, Object> principal = (Map<String, Object>) auth.getPrincipal();
-
+                        String bearerToken = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
                         ServerHttpRequest mutatedRequest = exchange.getRequest().mutate()
+                                .header(HttpHeaders.AUTHORIZATION, bearerToken)
                                 .header(GatewayConstant.X_HEADER_USER_ID, (String) principal.get(GatewayConstant.PRINCIPAL_USER_ID))
                                 .header(GatewayConstant.X_HEADER_USER_KEY, (String) principal.get(GatewayConstant.PRINCIPAL_ID))
                                 .header(GatewayConstant.X_HEADER_USER_NAME, (String) principal.get(GatewayConstant.PRINCIPAL_NAME))
