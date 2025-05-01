@@ -82,6 +82,6 @@ public class GatewaySecurityConfig {
 
     @Bean
     public WebFilter jwtHeaderPropagationWebFilter() {
-        return new JwtHeaderPropagationWebFilter(); // manually instantiate your filter
+        return new JwtHeaderPropagationWebFilter(properties); // manually instantiate your filter
     }
 }

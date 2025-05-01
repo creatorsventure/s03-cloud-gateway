@@ -1,6 +1,7 @@
 package com.cv.s03cloudgateway.service.component;
 
-import com.cv.s03cloudgateway.constant.GatewayConstant;
+import com.cv.s03cloudgateway.config.props.CloudGatewayProperties;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -14,8 +15,11 @@ import reactor.core.publisher.Mono;
 
 import java.util.Map;
 
+@AllArgsConstructor
 @Slf4j
 public class JwtHeaderPropagationWebFilter implements WebFilter {
+
+    private final CloudGatewayProperties properties;
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
@@ -32,11 +36,19 @@ public class JwtHeaderPropagationWebFilter implements WebFilter {
                         Map<String, Object> principal = (Map<String, Object>) auth.getPrincipal();
                         String bearerToken = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
                         ServerHttpRequest mutatedRequest = exchange.getRequest().mutate()
-                                .header(HttpHeaders.AUTHORIZATION, bearerToken)
-                                .header(GatewayConstant.X_HEADER_USER_ID, (String) principal.get(GatewayConstant.PRINCIPAL_USER_ID))
-                                .header(GatewayConstant.X_HEADER_USER_KEY, (String) principal.get(GatewayConstant.PRINCIPAL_ID))
-                                .header(GatewayConstant.X_HEADER_USER_NAME, (String) principal.get(GatewayConstant.PRINCIPAL_NAME))
-                                .build();
+                                .headers(httpHeaders -> {
+                                    // Static headers
+                                    // httpHeaders.set(HttpHeaders.AUTHORIZATION, bearerToken);
+                                    // Dynamic headers from config
+                                    for (String header : properties.getAllowedHeaders()) {
+                                        if (principal.containsKey(header)) {
+                                            String value = String.valueOf(principal.get(header));
+                                            if (value != null) {
+                                                httpHeaders.set(header, value);
+                                            }
+                                        }
+                                    }
+                                }).build();
 
                         ServerWebExchange mutatedExchange = exchange.mutate()
                                 .request(mutatedRequest)
